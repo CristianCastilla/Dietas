@@ -82,7 +82,7 @@
         <h2 class="text-xl font-bold text-emerald-800 mb-4 flex items-center gap-2">
           <i class="fa-solid fa-basket-shopping"></i> Lista de la Compra Semanal
         </h2>
-        <p class="text-sm text-slate-500 mb-6">Lista ajustada al 100% con tus preferencias (incluye harina de centeno para la pizza del viernes).</p>
+        <p class="text-sm text-slate-500 mb-6">Lista ajustada al 100% con tus preferencias y gramajes indicados.</p>
 
         <div class="grid md:grid-cols-2 gap-6" id="shopping-list-container">
           <!-- Populated by JS -->
@@ -94,7 +94,7 @@
 
   <script>
     // Data definition for ~1100 kcal plan (No mid-morning snack)
-    const breakfastText = "70 g de pan integral con un chorrito de aceite de oliva virgen extra + pechuga de pavo + café americano sin azúcar.";
+    const breakfastText = "70g de pan integral + 40g de pechuga de pavo + 5g (1 cdta) de AOVE + 200ml de café americano sin azúcar.";
     const breakfastKcal = "~270 kcal";
 
     const dietPlan = {
@@ -103,9 +103,9 @@
         kcal: "~1.100 kcal",
         meals: [
           { title: "Desayuno", time: "08:30 - 09:00", kcal: breakfastKcal, icon: "fa-coffee", desc: breakfastText },
-          { title: "Comida", time: "14:00 - 14:30", kcal: "~460 kcal", icon: "fa-utensils", desc: "Pechuga de pollo a la plancha (150g) + ensalada de lechuga iceberg, tomate y pepino con 1 cdta de AOVE + 35g de arroz integral cocido." },
-          { title: "Merienda", time: "17:30", kcal: "~125 kcal", icon: "fa-cookie-bite", desc: "1 natilla proteica (125 kcal)." },
-          { title: "Cena", time: "21:00", kcal: "~250 kcal", icon: "fa-moon", desc: "Tortilla francesa (1 huevo + 1 clara) con champiñones al ajillo + ensalada de rodajas de tomate con orégano." }
+          { title: "Comida", time: "14:00 - 14:30", kcal: "~460 kcal", icon: "fa-utensils", desc: "150g de pechuga de pollo a la plancha + ensalada de 100g de lechuga iceberg, 100g de tomate y 50g de pepino con 5g de AOVE + 35g de arroz integral en seco (100g cocido)." },
+          { title: "Merienda", time: "17:30", kcal: "~125 kcal", icon: "fa-cookie-bite", desc: "1 natilla proteica (120g - 125 kcal)." },
+          { title: "Cena", time: "21:00", kcal: "~250 kcal", icon: "fa-moon", desc: "Tortilla francesa (1 huevo de 55g + 1 clara de 35g) con 100g de champiñones al ajillo + ensalada de 150g de tomate con orégano y 5g de AOVE." }
         ]
       },
       martes: {
@@ -113,9 +113,9 @@
         kcal: "~1.090 kcal",
         meals: [
           { title: "Desayuno", time: "08:30 - 09:00", kcal: breakfastKcal, icon: "fa-coffee", desc: breakfastText },
-          { title: "Comida", time: "14:00 - 14:30", kcal: "~480 kcal", icon: "fa-utensils", desc: "Lomo de salmón salvaje en airfryer/horno (130g) + calabacín y pimiento rojo asado + 1 patata pequeña cocida (90g)." },
-          { title: "Merienda", time: "17:30", kcal: "~90 kcal", icon: "fa-cookie-bite", desc: "1 yogur proteico 0% o natural desnatado + 120g de fresas o frambuesas." },
-          { title: "Cena", time: "21:00", kcal: "~250 kcal", icon: "fa-moon", desc: "Crema de calabacín y puerro (sin nata ni quesitos) + 120g de gambas o gulas al ajillo salteadas." }
+          { title: "Comida", time: "14:00 - 14:30", kcal: "~480 kcal", icon: "fa-utensils", desc: "130g de lomo de salmón salvaje en airfryer/horno + 100g de calabacín y 100g de pimiento rojo asado con 5g de AOVE + 90g de patata pequeña cocida." },
+          { title: "Merienda", time: "17:30", kcal: "~90 kcal", icon: "fa-cookie-bite", desc: "120g de yogur proteico 0% o natural desnatado + 120g de fresas o frambuesas." },
+          { title: "Cena", time: "21:00", kcal: "~250 kcal", icon: "fa-moon", desc: "Crema ligera (150g de calabacín + 50g de puerro) sin nata ni quesitos + 120g de gambas o gulas al ajillo salteadas con 5g de AOVE." }
         ]
       },
       miercoles: {
@@ -123,9 +123,9 @@
         kcal: "~1.095 kcal",
         meals: [
           { title: "Desayuno", time: "08:30 - 09:00", kcal: breakfastKcal, icon: "fa-coffee", desc: breakfastText },
-          { title: "Comida", time: "14:00 - 14:30", kcal: "~430 kcal", icon: "fa-utensils", desc: "Lentejas estofadas con verduras (cebolla, zanahoria, calabaza y pimiento - sin embutido, 200g cocidas) + ensalada de lechuga iceberg y tomate." },
-          { title: "Merienda", time: "17:30", kcal: "~125 kcal", icon: "fa-cookie-bite", desc: "1 natilla proteica (125 kcal)." },
-          { title: "Cena", time: "21:00", kcal: "~270 kcal", icon: "fa-moon", desc: "Ensalada completa: lechuga iceberg + 2 latas de atún al natural + tomate picado + pepino con vinagre de manzana y 1 cdta de AOVE." }
+          { title: "Comida", time: "14:00 - 14:30", kcal: "~430 kcal", icon: "fa-utensils", desc: "200g de lentejas estofadas cocidas con verduras (60g cebolla, 50g zanahoria, 50g calabaza, 40g pimiento - sin embutido) + ensalada de 100g de lechuga iceberg y 100g de tomate con 5g de AOVE." },
+          { title: "Merienda", time: "17:30", kcal: "~125 kcal", icon: "fa-cookie-bite", desc: "1 natilla proteica (120g - 125 kcal)." },
+          { title: "Cena", time: "21:00", kcal: "~270 kcal", icon: "fa-moon", desc: "Ensalada completa: 100g de lechuga iceberg + 104g de atún al natural (2 latas escurridas) + 100g de tomate + 50g de pepino con vinagre y 5g de AOVE." }
         ]
       },
       jueves: {
@@ -133,9 +133,9 @@
         kcal: "~1.100 kcal",
         meals: [
           { title: "Desayuno", time: "08:30 - 09:00", kcal: breakfastKcal, icon: "fa-coffee", desc: breakfastText },
-          { title: "Comida", time: "14:00 - 14:30", kcal: "~470 kcal", icon: "fa-utensils", desc: "Solomillo de pavo o cinta de lomo magra (150g) a la plancha + salteado de judías verdes y champiñones con ajo." },
-          { title: "Merienda", time: "17:30", kcal: "~100 kcal", icon: "fa-cookie-bite", desc: "1 yogur proteico sin azúcar + 1 manzana pequeña." },
-          { title: "Cena", time: "21:00", kcal: "~260 kcal", icon: "fa-moon", desc: "Hamburguesa casera de pavo/pollo (130g) a la plancha + calabacín a la plancha y ensalada de lechuga iceberg." }
+          { title: "Comida", time: "14:00 - 14:30", kcal: "~470 kcal", icon: "fa-utensils", desc: "150g de solomillo de pavo o cinta de lomo magra a la plancha + salteado de 100g de judías verdes y 100g de champiñones con ajo y 5g de AOVE." },
+          { title: "Merienda", time: "17:30", kcal: "~100 kcal", icon: "fa-cookie-bite", desc: "120g de yogur proteico sin azúcar + 100g de manzana pequeña." },
+          { title: "Cena", time: "21:00", kcal: "~260 kcal", icon: "fa-moon", desc: "130g de hamburguesa casera de pavo/pollo a la plancha + 100g de calabacín a la plancha + ensalada de 100g de lechuga iceberg con 5g de AOVE." }
         ]
       },
       viernes: {
@@ -143,9 +143,9 @@
         kcal: "~1.100 kcal",
         meals: [
           { title: "Desayuno", time: "08:30 - 09:00", kcal: breakfastKcal, icon: "fa-coffee", desc: breakfastText },
-          { title: "Comida", time: "14:00 - 14:30", kcal: "~440 kcal", icon: "fa-utensils", desc: "Lasaña ligera de calabacín: láminas de calabacín rellenas de carne picada de pollo/pavo (140g) y tomate natural triturado." },
-          { title: "Merienda", time: "17:30", kcal: "~85 kcal", icon: "fa-cookie-bite", desc: "1 yogur natural 0% + 1 tajada de sandía o melón." },
-          { title: "Cena", time: "21:00", kcal: "~305 kcal", icon: "fa-pizza-slice", desc: "Pizza casera con masa de harina de centeno: base fina con tomate natural, pechuga de pavo/pollo, queso fresco 0% / rallado ligero y orégano." }
+          { title: "Comida", time: "14:00 - 14:30", kcal: "~440 kcal", icon: "fa-utensils", desc: "Lasaña ligera: 150g de láminas de calabacín rellenas de 140g de carne picada de pollo/pavo y 100g de tomate natural triturado." },
+          { title: "Merienda", time: "17:30", kcal: "~85 kcal", icon: "fa-cookie-bite", desc: "125g de yogur natural 0% + 150g de sandía o melón." },
+          { title: "Cena", time: "21:00", kcal: "~305 kcal", icon: "fa-pizza-slice", desc: "Pizza casera de centeno: masa fina con 40g de harina de centeno + 50g de tomate natural + 60g de pechuga de pavo/pollo + 30g de queso fresco 0% / rallado ligero y orégano." }
         ]
       },
       sabado: {
@@ -153,9 +153,9 @@
         kcal: "~1.110 kcal",
         meals: [
           { title: "Desayuno", time: "08:30 - 09:00", kcal: breakfastKcal, icon: "fa-coffee", desc: breakfastText },
-          { title: "Comida", time: "14:00 - 14:30", kcal: "~470 kcal", icon: "fa-utensils", desc: "Nuggets caseros en Airfryer (pechuga de pollo picada con brócoli triturado y especias) + ensalada de lechuga iceberg y cherrys." },
-          { title: "Merienda", time: "17:30", kcal: "~100 kcal", icon: "fa-cookie-bite", desc: "1 yogur desnatado + 1 pera." },
-          { title: "Cena", time: "21:00", kcal: "~270 kcal", icon: "fa-moon", desc: "Tortilla de calabacín (1 huevo + 1 clara) + 60g de queso fresco 0% con orégano y ensalada de tomate. (Sin pescado)." }
+          { title: "Comida", time: "14:00 - 14:30", kcal: "~470 kcal", icon: "fa-utensils", desc: "Nuggets caseros en Airfryer: 150g de pechuga de pollo picada con 80g de brócoli triturado + ensalada de 100g de lechuga iceberg y 80g de tomate cherry con 5g de AOVE." },
+          { title: "Merienda", time: "17:30", kcal: "~100 kcal", icon: "fa-cookie-bite", desc: "125g de yogur desnatado + 100g de pera." },
+          { title: "Cena", time: "21:00", kcal: "~270 kcal", icon: "fa-moon", desc: "Tortilla de calabacín (1 huevo de 55g + 1 clara de 35g + 100g de calabacín) + 60g de queso fresco 0% con orégano + ensalada de 100g de tomate con 5g de AOVE. (Sin pescado)." }
         ]
       },
       domingo: {
@@ -163,46 +163,46 @@
         kcal: "~1.090 kcal",
         meals: [
           { title: "Desayuno", time: "08:30 - 09:00", kcal: breakfastKcal, icon: "fa-coffee", desc: breakfastText },
-          { title: "Comida", time: "14:00 - 14:30", kcal: "~460 kcal", icon: "fa-utensils", desc: "Merluza al papillote en airfryer/horno (140g) con rodajas de calabacín, zanahoria, cebolla y 1 patata pequeña (90g)." },
-          { title: "Merienda", time: "17:30", kcal: "~100 kcal", icon: "fa-cookie-bite", desc: "1 yogur proteico + 1 naranja." },
-          { title: "Cena", time: "21:00", kcal: "~260 kcal", icon: "fa-moon", desc: "Pechuga de pavo a la plancha (120g) con finas hierbas + crema ligera de verduras o ensalada de lechuga iceberg." }
+          { title: "Comida", time: "14:00 - 14:30", kcal: "~460 kcal", icon: "fa-utensils", desc: "140g de lomo de merluza al papillote en airfryer/horno con 80g de calabacín, 50g de zanahoria, 40g de cebolla y 90g de patata pequeña cocida con 5g de AOVE." },
+          { title: "Merienda", time: "17:30", kcal: "~100 kcal", icon: "fa-cookie-bite", desc: "120g de yogur proteico + 120g de naranja." },
+          { title: "Cena", time: "21:00", kcal: "~260 kcal", icon: "fa-moon", desc: "120g de pechuga de pavo a la plancha con finas hierbas + 200g de crema ligera de verduras o ensalada de 100g de lechuga iceberg con 5g de AOVE." }
         ]
       }
     };
 
     const shoppingList = {
       "Panadería y Desayuno": [
-        "Pan 100% integral (para raciones de 70g)",
-        "Harina de centeno (para la pizza casera del viernes)",
-        "Pechuga de pavo alta en cárnico / baja en sal",
-        "Café americano / grano / molido",
-        "Aceite de Oliva Virgen Extra (AOVE)"
+        "Pan 100% integral (raciones fijas de 70g/día)",
+        "Harina de centeno (40g por pizza de los viernes)",
+        "Pechuga de pavo baja en sal / alta en cárnico (40g/día desayuno)",
+        "Café americano / en grano / molido",
+        "Aceite de Oliva Virgen Extra (AOVE) (usar cdtas de 5g)"
       ],
       "Proteínas y Carnes/Pescados": [
-        "Pechuga de pollo y pavo (filetes y picada)",
-        "Lomo magro de cerdo o pavo",
-        "Lomo de salmón salvaje (1 comida/semana)",
-        "Lomos de merluza (1 comida/semana)",
-        "Gambas congeladas o gulas",
-        "Huevos L o claras de huevo pasteurizadas",
-        "Atún al natural (varias latas)"
+        "Pechuga de pollo y pavo (filetes y picada en raciones de 120g-150g)",
+        "Lomo magro de cerdo o pavo (150g/ración)",
+        "Lomo de salmón salvaje (130g/semana)",
+        "Lomo de merluza (140g/semana)",
+        "Gambas congeladas o gulas (120g/ración)",
+        "Huevos L (55g) y claras de huevo (35g/ración)",
+        "Atún al natural (latas de 52g escurridas)"
       ],
       "Verduras y Hortalizas (Excluidos: edamame, espárragos, ajetes, canónigos)": [
-        "Lechuga iceberg (base de ensaladas)",
-        "Calabacín y calabaza",
-        "Champiñones enteros o laminados",
-        "Judías verdes",
-        "Tomates frescos y tomate cherry",
-        "Pimientos (rojos y verdes)",
-        "Puerros y cebollas",
-        "Brócoli fresco",
-        "Patatas pequeñas"
+        "Lechuga iceberg (base de ensaladas, 100g por ración)",
+        "Calabacín y calabaza (80g - 150g por ración)",
+        "Champiñones enteros o laminados (100g por ración)",
+        "Judías verdes (100g por ración)",
+        "Tomates frescos y tomate cherry (80g - 150g por ración)",
+        "Pimientos rojo y verde (40g - 100g por ración)",
+        "Puerros y cebollas (40g - 60g por ración)",
+        "Brócoli fresco (80g por ración)",
+        "Patatas pequeñas (90g por ración)"
       ],
       "Lácteos, Natillas y Frutas (Excluidos: kiwis)": [
-        "Natillas proteicas (2 unidades para meriendas)",
-        "Yogures naturales 0% o proteicos sin azúcar",
-        "Queso fresco 0% grasa",
-        "Frutas variadas (manzanas, fresas, naranjas, peras, melón/sandía)",
+        "Natillas proteicas (2 unidades de 120g / 125 kcal para meriendas)",
+        "Yogures naturales 0% o proteicos sin azúcar (120g - 125g por ración)",
+        "Queso fresco 0% grasa (30g - 60g por ración)",
+        "Frutas variadas (manzanas 100g, fresas 120g, naranjas 120g, peras 100g, melón/sandía 150g)",
         "Tortillas integrales pequeñas"
       ]
     };
