@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plan Nutricional (~1100 kcal) - Laura Torralbo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .tab-btn.active {
+      border-bottom: 3px solid #059669;
+      color: #059669;
+      font-weight: bold;
+    }
+    .checkbox-custom:checked + label {
+      text-decoration: line-through;
+      color: #9ca3af;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen pb-12">
+
+  <!-- Header -->
+  <header class="bg-emerald-700 text-white shadow-md">
+    <div class="max-w-4xl mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
+      <div>
+        <h1 class="text-2xl font-bold flex items-center gap-2">
+          <i class="fa-solid fa-apple-whole"></i> Plan Nutricional Personalizado
+        </h1>
+        <p class="text-emerald-100 text-sm mt-1">Laura Torralbo Porcel • Objetivo: ~1.100 kcal/día</p>
+      </div>
+      <div id="today-badge" class="bg-emerald-800 text-emerald-100 px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2">
+        <i class="fa-regular fa-calendar-check text-emerald-300"></i>
+        <span>Cargando día...</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="max-w-4xl mx-auto px-4 mt-6">
+
+    <!-- Navigation Tabs -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 mb-6 overflow-x-auto">
+      <div class="flex whitespace-nowrap p-2 gap-1 text-sm font-medium" id="tabs-container">
+        <button onclick="switchTab('lunes')" id="tab-lunes" class="tab-btn px-4 py-2.5 rounded-lg text-slate-600 hover:bg-slate-100 transition">Lunes</button>
+        <button onclick="switchTab('martes')" id="tab-martes" class="tab-btn px-4 py-2.5 rounded-lg text-slate-600 hover:bg-slate-100 transition">Martes</button>
+        <button onclick="switchTab('miercoles')" id="tab-miercoles" class="tab-btn px-4 py-2.5 rounded-lg text-slate-600 hover:bg-slate-100 transition">Miércoles</button>
+        <button onclick="switchTab('jueves')" id="tab-jueves" class="tab-btn px-4 py-2.5 rounded-lg text-slate-600 hover:bg-slate-100 transition">Jueves</button>
+        <button onclick="switchTab('viernes')" id="tab-viernes" class="tab-btn px-4 py-2.5 rounded-lg text-slate-600 hover:bg-slate-100 transition">Viernes</button>
+        <button onclick="switchTab('sabado')" id="tab-sabado" class="tab-btn px-4 py-2.5 rounded-lg text-slate-600 hover:bg-slate-100 transition">Sábado</button>
+        <button onclick="switchTab('domingo')" id="tab-domingo" class="tab-btn px-4 py-2.5 rounded-lg text-slate-600 hover:bg-slate-100 transition">Domingo</button>
+        <button onclick="switchTab('compra')" id="tab-compra" class="tab-btn px-4 py-2.5 rounded-lg text-emerald-700 hover:bg-emerald-50 transition border-l"><i class="fa-solid fa-cart-shopping mr-1"></i> Compra</button>
+      </div>
+    </div>
+
+    <!-- Water & Habit Tracker Card -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-3">
+        <div class="bg-blue-100 text-blue-600 p-3 rounded-full">
+          <i class="fa-solid fa-glass-water text-xl"></i>
+        </div>
+        <div>
+          <h3 class="font-bold text-slate-700">Hidratación Diaria</h3>
+          <p class="text-xs text-slate-500">Objetivo: 1.5L - 2L de agua al día</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span id="water-count" class="font-bold text-blue-600 text-lg mr-2">0/8 vasos</span>
+        <button onclick="addWater()" class="bg-blue-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-blue-700 transition">+1 Vaso</button>
+        <button onclick="resetWater()" class="text-slate-400 hover:text-slate-600 text-xs px-2"><i class="fa-solid fa-rotate-right"></i></button>
+      </div>
+    </div>
+
+    <!-- DAY VIEWS -->
+    <div id="days-content">
+      <!-- Dynamic rendering via JS -->
+    </div>
+
+    <!-- SHOPPING LIST TAB -->
+    <div id="view-compra" class="tab-content hidden">
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+        <h2 class="text-xl font-bold text-emerald-800 mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-basket-shopping"></i> Lista de la Compra Semanal
+        </h2>
+        <p class="text-sm text-slate-500 mb-6">Lista ajustada al 100% con tus preferencias (sin edamame, sepia, espárragos, ajetes, canónigos ni kiwis).</p>
+
+        <div class="grid md:grid-cols-2 gap-6" id="shopping-list-container">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    // Data definition for ~1100 kcal plan (No mid-morning snack)
+    const breakfastText = "70 g de pan integral con un chorrito de aceite de oliva virgen extra + pechuga de pavo + café americano sin azúcar.";
+    const breakfastKcal = "~270 kcal";
+
+    const dietPlan = {
+      lunes: {
+        dayName: "Lunes",
+        kcal: "~1.100 kcal",
+        meals: [
+          { title: "Desayuno", time: "08:30 - 09:00", kcal: breakfastKcal, icon: "fa-coffee", desc: breakfastText },
+          { title: "Comida", time: "14:00 - 14:30", kcal: "~460 kcal", icon: "fa-utensils", desc: "Pechuga de pollo a la plancha (150g) + ensalada de lechuga iceberg, tomate y pepino con 1 cdta de AOVE + 35g de arroz integral cocido." },
+          { title: "Merienda", time: "17:30", kcal: "~125 kcal", icon: "fa-custard", iconAlt: "fa-cookie-bite", desc: "1 natilla proteica (125 kcal)." },
+          { title: "Cena", time: "21:00", kcal: "~250 kcal", icon: "fa-moon", desc: "Tortilla francesa (1 huevo + 1 clara) con champiñones al ajillo + ensalada de rodajas de tomate con orégano." }
+        ]
+      },
+      martes: {
+        dayName: "Martes",
+        kcal: "~1.090 kcal",
+        meals: [
+          { title: "Desayuno", time: "08:30 - 09:00", kcal: breakfastKcal, icon: "fa-coffee", desc: breakfastText },
+          { title: "Comida", time: "14:00 - 14:30", kcal: "~480 kcal", icon: "fa-utensils", desc: "Lomo de salmón salvaje en airfryer/horno (130g) + calabacín y pimiento rojo asado + 1 patata pequeña cocida (90g)." },
+          { title: "Merienda", time: "17:30", kcal: "~90 kcal", icon: "fa-cookie-bite", desc: "1 yogur proteico 0% o natural desnatado + 120g de fresas o frambuesas." },
+          { title: "Cena", time: "21:00", kcal: "~250 kcal", icon: "fa-moon", desc: "Crema de calabacín y puerro (sin nata ni quesitos) + 120g de gambas o gulas al ajillo salteadas." }
+        ]
+      },
+      miercoles: {
+        dayName: "Miércoles",
+        kcal: "~1.095 kcal",
+        meals: [
+          { title: "Desayuno", time: "08:30 - 09:00", kcal: breakfastKcal, icon: "fa-coffee", desc: breakfastText },
+          { title: "Comida", time: "14:00 - 14:30", kcal: "~430 kcal", icon: "fa-utensils", desc: "Lentejas estofadas con verduras (cebolla, zanahoria, calabaza y pimiento - sin embutido, 200g cocidas) + ensalada de lechuga iceberg y tomate." },
+          { title: "Merienda", time: "17:30", kcal: "~125 kcal", icon: "fa-cookie-bite", desc: "1 natilla proteica (125 kcal)." },
+          { title: "Cena", time: "21:00", kcal: "~270 kcal", icon: "fa-moon", desc: "Ensalada completa: lechuga iceberg + 2 latas de atún al natural + tomate picado + pepino con vinagre de manzana y 1 cdta de AOVE." }
+        ]
+      },
+      jueves: {
+        dayName: "Jueves",
+        kcal: "~1.100 kcal",
+        meals: [
+          { title: "Desayuno", time: "08:30 - 09:00", kcal: breakfastKcal, icon: "fa-coffee", desc: breakfastText },
+          { title: "Comida", time: "14:00 - 14:30", kcal: "~470 kcal", icon: "fa-utensils", desc: "Solomillo de pavo o cinta de lomo magra (150g) a la plancha + salteado de judías verdes y champiñones con ajo." },
+          { title: "Merienda", time: "17:30", kcal: "~100 kcal", icon: "fa-cookie-bite", desc: "1 yogur proteico sin azúcar + 1 manzana pequeña." },
+          { title: "Cena", time: "21:00", kcal: "~260 kcal", icon: "fa-moon", desc: "Hamburguesa casera de pavo/pollo (130g) a la plancha + calabacín a la plancha y ensalada de lechuga iceberg." }
+        ]
+      },
+      viernes: {
+        dayName: "Viernes",
+        kcal: "~1.085 kcal",
+        meals: [
+          { title: "Desayuno", time: "08:30 - 09:00", kcal: breakfastKcal, icon: "fa-coffee", desc: breakfastText },
+          { title: "Comida", time: "14:00 - 14:30", kcal: "~460 kcal", icon: "fa-utensils", desc: "Lasaña ligera de calabacín: láminas de calabacín rellenas de carne picada de pollo/pavo (140g) y tomate natural triturado." },
+          { title: "Merienda", time: "17:30", kcal: "~85 kcal", icon: "fa-cookie-bite", desc: "1 yogur natural 0% + 1 tajada de sandía o melón." },
+          { title: "Cena", time: "21:00", kcal: "~270 kcal", icon: "fa-moon", desc: "Wrap ligero: 1 tortilla integral pequeña con 50g de pechuga de pavo o pollo, 40g de queso fresco 0% y lechuga iceberg." }
+        ]
+      },
+      sabado: {
+        dayName: "Sábado",
+        kcal: "~1.110 kcal",
+        meals: [
+          { title: "Desayuno", time: "08:30 - 09:00", kcal: breakfastKcal, icon: "fa-coffee", desc: breakfastText },
+          { title: "Comida", time: "14:00 - 14:30", kcal: "~470 kcal", icon: "fa-utensils", desc: "Nuggets caseros en Airfryer (pechuga de pollo picada con brócoli triturado y especias) + ensalada de lechuga iceberg y cherrys." },
+          { title: "Merienda", time: "17:30", kcal: "~100 kcal", icon: "fa-cookie-bite", desc: "1 yogur desnatado + 1 pera." },
+          { title: "Cena", time: "21:00", kcal: "~270 kcal", icon: "fa-moon", desc: "Tortilla de calabacín (1 huevo + 1 clara) + 60g de queso fresco 0% con orégano y ensalada de tomate. (Sin pescado)." }
+        ]
+      },
+      domingo: {
+        dayName: "Domingo",
+        kcal: "~1.090 kcal",
+        meals: [
+          { title: "Desayuno", time: "08:30 - 09:00", kcal: breakfastKcal, icon: "fa-coffee", desc: breakfastText },
+          { title: "Comida", time: "14:00 - 14:30", kcal: "~460 kcal", icon: "fa-utensils", desc: "Merluza al papillote en airfryer/horno (140g) con rodajas de calabacín, zanahoria, cebolla y 1 patata pequeña (90g)." },
+          { title: "Merienda", time: "17:30", kcal: "~100 kcal", icon: "fa-cookie-bite", desc: "1 yogur proteico + 1 naranja." },
+          { title: "Cena", time: "21:00", kcal: "~260 kcal", icon: "fa-moon", desc: "Pechuga de pavo a la plancha (120g) con finas hierbas + crema ligera de verduras o ensalada de lechuga iceberg." }
+        ]
+      }
+    };
+
+    const shoppingList = {
+      "Panadería y Desayuno": [
+        "Pan 100% integral (para raciones de 70g)",
+        "Pechuga de pavo alta en cárnico / baja en sal",
+        "Café americano / grano / molido",
+        "Aceite de Oliva Virgen Extra (AOVE)"
+      ],
+      "Proteínas y Carnes/Pescados": [
+        "Pechuga de pollo y pavo (filetes y picada)",
+        "Lomo magro de cerdo o pavo",
+        "Lomo de salmón salvaje (1 comida/semana)",
+        "Lomos de merluza (1 comida/semana)",
+        "Gambas congeladas o gulas",
+        "Huevos L o claras de huevo pasteurizadas",
+        "Atún al natural (varias latas)"
+      ],
+      "Verduras y Hortalizas (Excluidos: edamame, espárragos, ajetes, canónigos)": [
+        "Lechuga iceberg (base de ensaladas)",
+        "Calabacín y calabaza",
+        "Champiñones enteros o laminados",
+        "Judías verdes",
+        "Tomates frescos y tomate cherry",
+        "Pimientos (rojos y verdes)",
+        "Puerros y cebollas",
+        "Brócoli fresco",
+        "Patatas pequeñas"
+      ],
+      "Lácteos, Natillas y Frutas (Excluidos: kiwis)": [
+        "Natillas proteicas (2 unidades para meriendas)",
+        "Yogures naturales 0% o proteicos sin azúcar",
+        "Queso fresco 0% grasa",
+        "Frutas variadas (manzanas, fresas, naranjas, peras, melón/sandía)",
+        "Tortillas integrales pequeñas (wraps)"
+      ]
+    };
+
+    // Render HTML Functions
+    function renderDays() {
+      const container = document.getElementById("days-content");
+      let html = "";
+
+      for (const key in dietPlan) {
+        const day = dietPlan[key];
+        html += `
+          <div id="view-${key}" class="tab-content hidden">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mb-4 flex justify-between items-center">
+              <div>
+                <h2 class="text-xl font-bold text-slate-800">Menú del ${day.dayName}</h2>
+                <p class="text-xs text-slate-500">Planificación diaria estimada (Sin media mañana)</p>
+              </div>
+              <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">${day.kcal}</span>
+            </div>
+
+            <div class="space-y-4">
+        `;
+
+        day.meals.forEach((meal, idx) => {
+          const checkId = `${key}-meal-${idx}`;
+          const iconClass = meal.iconAlt || meal.icon;
+          html += `
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 transition hover:border-emerald-300">
+              <div class="flex items-start justify-between gap-3">
+                <div class="flex items-start gap-3">
+                  <div class="bg-emerald-50 text-emerald-600 p-2.5 rounded-lg mt-1">
+                    <i class="fa-solid ${iconClass} text-lg"></i>
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <h3 class="font-bold text-slate-800">${meal.title}</h3>
+                      <span class="text-xs text-slate-400 font-normal">(${meal.time})</span>
+                    </div>
+                    <p class="text-xs font-semibold text-emerald-700 mb-1">${meal.kcal}</p>
+                    <p class="text-sm text-slate-600 leading-relaxed">${meal.desc}</p>
+                  </div>
+                </div>
+                <div class="pt-1">
+                  <input type="checkbox" id="${checkId}" class="checkbox-custom w-5 h-5 accent-emerald-600 rounded cursor-pointer" onchange="saveCheck('${checkId}')">
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        html += `
+            </div>
+          </div>
+        `;
+      }
+      container.innerHTML = html;
+    }
+
+    function renderShoppingList() {
+      const container = document.getElementById("shopping-list-container");
+      let html = "";
+      for (const category in shoppingList) {
+        html += `
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+            <h3 class="font-bold text-slate-700 mb-3 border-b border-slate-200 pb-2">${category}</h3>
+            <ul class="space-y-2">
+        `;
+        shoppingList[category].forEach((item, idx) => {
+          const itemId = `shop-${category.substr(0,3)}-${idx}`;
+          html += `
+            <li class="flex items-center gap-2 text-sm text-slate-600">
+              <input type="checkbox" id="${itemId}" class="checkbox-custom w-4 h-4 accent-emerald-600 rounded cursor-pointer" onchange="saveCheck('${itemId}')">
+              <label for="${itemId}" class="cursor-pointer">${item}</label>
+            </li>
+          `;
+        });
+        html += `</ul></div>`;
+      }
+      container.innerHTML = html;
+    }
+
+    // Navigation and Auto Day Switch
+    function switchTab(tabKey) {
+      document.querySelectorAll(".tab-content").forEach(el => el.classList.add("hidden"));
+      document.querySelectorAll(".tab-btn").forEach(el => el.classList.remove("active"));
+
+      const activeView = document.getElementById(`view-${tabKey}`);
+      const activeTabBtn = document.getElementById(`tab-${tabKey}`);
+
+      if (activeView) activeView.classList.remove("hidden");
+      if (activeTabBtn) activeTabBtn.classList.add("active");
+    }
+
+    function autoSelectToday() {
+      const daysMap = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
+      const todayIndex = new Date().getDay();
+      const todayKey = daysMap[todayIndex];
+
+      const dayNamesEs = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+      document.getElementById('today-badge').innerHTML = `
+        <i class="fa-regular fa-calendar-check text-emerald-300"></i>
+        <span>Hoy es ${dayNamesEs[todayIndex]}</span>
+      `;
+
+      switchTab(todayKey);
+    }
+
+    // Local Storage for Checkboxes & Water Counter
+    let waterCount = 0;
+
+    function addWater() {
+      if (waterCount < 8) waterCount++;
+      updateWaterDisplay();
+      localStorage.setItem('waterCount', waterCount);
+    }
+
+    function resetWater() {
+      waterCount = 0;
+      updateWaterDisplay();
+      localStorage.setItem('waterCount', waterCount);
+    }
+
+    function updateWaterDisplay() {
+      document.getElementById('water-count').innerText = `${waterCount}/8 vasos`;
+    }
+
+    function saveCheck(id) {
+      const checkbox = document.getElementById(id);
+      if (checkbox) {
+        localStorage.setItem(id, checkbox.checked);
+      }
+    }
+
+    function loadSavedStates() {
+      // Water
+      const savedWater = localStorage.getItem('waterCount');
+      if (savedWater !== null) {
+        waterCount = parseInt(savedWater);
+        updateWaterDisplay();
+      }
+
+      // Checkboxes
+      document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        const savedVal = localStorage.getItem(cb.id);
+        if (savedVal === 'true') {
+          cb.checked = true;
+        }
+      });
+    }
+
+    // Initialize App
+    window.onload = function() {
+      renderDays();
+      renderShoppingList();
+      autoSelectToday();
+      loadSavedStates();
+    };
+  </script>
+</body>
+</html>
