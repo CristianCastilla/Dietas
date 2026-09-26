@@ -82,7 +82,7 @@
         <h2 class="text-xl font-bold text-emerald-800 mb-4 flex items-center gap-2">
           <i class="fa-solid fa-basket-shopping"></i> Lista de la Compra Semanal
         </h2>
-        <p class="text-sm text-slate-500 mb-6">Lista ajustada al 100% con tus preferencias (sin edamame, sepia, espárragos, ajetes, canónigos ni kiwis).</p>
+        <p class="text-sm text-slate-500 mb-6">Lista ajustada al 100% con tus preferencias (incluye harina de centeno para la pizza del viernes).</p>
 
         <div class="grid md:grid-cols-2 gap-6" id="shopping-list-container">
           <!-- Populated by JS -->
@@ -104,7 +104,7 @@
         meals: [
           { title: "Desayuno", time: "08:30 - 09:00", kcal: breakfastKcal, icon: "fa-coffee", desc: breakfastText },
           { title: "Comida", time: "14:00 - 14:30", kcal: "~460 kcal", icon: "fa-utensils", desc: "Pechuga de pollo a la plancha (150g) + ensalada de lechuga iceberg, tomate y pepino con 1 cdta de AOVE + 35g de arroz integral cocido." },
-          { title: "Merienda", time: "17:30", kcal: "~125 kcal", icon: "fa-custard", iconAlt: "fa-cookie-bite", desc: "1 natilla proteica (125 kcal)." },
+          { title: "Merienda", time: "17:30", kcal: "~125 kcal", icon: "fa-cookie-bite", desc: "1 natilla proteica (125 kcal)." },
           { title: "Cena", time: "21:00", kcal: "~250 kcal", icon: "fa-moon", desc: "Tortilla francesa (1 huevo + 1 clara) con champiñones al ajillo + ensalada de rodajas de tomate con orégano." }
         ]
       },
@@ -140,12 +140,12 @@
       },
       viernes: {
         dayName: "Viernes",
-        kcal: "~1.085 kcal",
+        kcal: "~1.100 kcal",
         meals: [
           { title: "Desayuno", time: "08:30 - 09:00", kcal: breakfastKcal, icon: "fa-coffee", desc: breakfastText },
-          { title: "Comida", time: "14:00 - 14:30", kcal: "~460 kcal", icon: "fa-utensils", desc: "Lasaña ligera de calabacín: láminas de calabacín rellenas de carne picada de pollo/pavo (140g) y tomate natural triturado." },
+          { title: "Comida", time: "14:00 - 14:30", kcal: "~440 kcal", icon: "fa-utensils", desc: "Lasaña ligera de calabacín: láminas de calabacín rellenas de carne picada de pollo/pavo (140g) y tomate natural triturado." },
           { title: "Merienda", time: "17:30", kcal: "~85 kcal", icon: "fa-cookie-bite", desc: "1 yogur natural 0% + 1 tajada de sandía o melón." },
-          { title: "Cena", time: "21:00", kcal: "~270 kcal", icon: "fa-moon", desc: "Wrap ligero: 1 tortilla integral pequeña con 50g de pechuga de pavo o pollo, 40g de queso fresco 0% y lechuga iceberg." }
+          { title: "Cena", time: "21:00", kcal: "~305 kcal", icon: "fa-pizza-slice", desc: "Pizza casera con masa de harina de centeno: base fina con tomate natural, pechuga de pavo/pollo, queso fresco 0% / rallado ligero y orégano." }
         ]
       },
       sabado: {
@@ -173,6 +173,7 @@
     const shoppingList = {
       "Panadería y Desayuno": [
         "Pan 100% integral (para raciones de 70g)",
+        "Harina de centeno (para la pizza casera del viernes)",
         "Pechuga de pavo alta en cárnico / baja en sal",
         "Café americano / grano / molido",
         "Aceite de Oliva Virgen Extra (AOVE)"
@@ -202,7 +203,7 @@
         "Yogures naturales 0% o proteicos sin azúcar",
         "Queso fresco 0% grasa",
         "Frutas variadas (manzanas, fresas, naranjas, peras, melón/sandía)",
-        "Tortillas integrales pequeñas (wraps)"
+        "Tortillas integrales pequeñas"
       ]
     };
 
@@ -228,7 +229,7 @@
 
         day.meals.forEach((meal, idx) => {
           const checkId = `${key}-meal-${idx}`;
-          const iconClass = meal.iconAlt || meal.icon;
+          const iconClass = meal.icon;
           html += `
             <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 transition hover:border-emerald-300">
               <div class="flex items-start justify-between gap-3">
