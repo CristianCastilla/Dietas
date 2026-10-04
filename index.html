@@ -1,327 +1,488 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="h-full bg-slate-50">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Menú Semanal - 1.100 kcal</title>
-  <style>
-    :root {
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --text: #1e293b;
-      --text-muted: #64748b;
-      --primary: #2563eb;
-      --primary-light: #eff6ff;
-      --border: #e2e8f0;
-      --badge-bg: #e0e7ff;
-      --badge-text: #3730a3;
-      --frozen: #0284c7;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-      margin: 0;
-      padding: 24px;
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 32px;
-    }
-
-    h1 {
-      font-size: 2rem;
-      margin: 0 0 8px 0;
-      color: #0f172a;
-    }
-
-    .subtitle {
-      color: var(--text-muted);
-      font-size: 1rem;
-      margin: 0;
-    }
-
-    .breakfast-card {
-      background-color: var(--primary-light);
-      border: 1px solid #bfdbfe;
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 32px;
-    }
-
-    .breakfast-card h2 {
-      margin: 0 0 12px 0;
-      color: #1d4ed8;
-      font-size: 1.25rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .breakfast-list {
-      margin: 0;
-      padding-left: 20px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 8px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 20px;
-    }
-
-    .day-card {
-      background-color: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .day-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 2px solid #f1f5f9;
-      padding-bottom: 12px;
-    }
-
-    .day-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin: 0;
-    }
-
-    .badge {
-      background-color: var(--badge-bg);
-      color: var(--badge-text);
-      font-size: 0.8rem;
-      font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 9999px;
-    }
-
-    .meal-block {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .meal-label {
-      font-weight: 600;
-      font-size: 0.9rem;
-      color: #334155;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .meal-desc {
-      font-size: 0.95rem;
-      color: #475569;
-    }
-
-    .frozen {
-      color: var(--frozen);
-      font-style: italic;
-      font-size: 0.85rem;
-    }
-
-    footer {
-      text-align: center;
-      margin-top: 40px;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
-  </style>
+  <title>Plan Nutricional Semanal | ~1.100 kcal</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body>
+<body class="min-h-full flex flex-col text-slate-800 font-sans antialiased pb-12">
 
-  <div class="container">
-    <header>
-      <h1>Plan Nutricional Semanal</h1>
-      <p class="subtitle">Ajustado a ~1.100 kcal / persona / día | Gramajes por persona</p>
-    </header>
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-blue-700 to-indigo-800 text-white shadow-lg sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 py-5 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div class="text-center sm:text-left">
+        <h1 class="text-2xl font-bold tracking-tight flex items-center justify-center sm:justify-start gap-2">
+          <i class="fa-solid fa-utensils text-blue-300"></i> Plan Nutricional Semanal
+        </h1>
+        <p class="text-blue-100 text-sm mt-1">Ajustado a ~1.100 kcal / persona / día • Gramajes por persona</p>
+      </div>
+      <div id="today-badge" class="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl px-4 py-2 text-xs font-medium flex items-center gap-2 text-blue-50">
+        <i class="fa-regular fa-calendar-check text-emerald-400 text-base"></i>
+        <span>Día detectado: <strong id="current-day-name" class="text-white font-bold capitalize">--</strong></span>
+      </div>
+    </div>
 
-    <!-- Desayuno Fijo -->
-    <section class="breakfast-card">
-      <h2>
-        <span>Desayuno Fijo Diario</span>
-        <span class="badge">~270 kcal</span>
-      </h2>
-      <ul class="breakfast-list">
-        <li>70 g de pan 100% integral</li>
-        <li>40 g de pechuga de pavo</li>
-        <li>5 g (1 cdta) de aceite de oliva virgen extra (AOVE)</li>
-        <li>200 ml de café americano sin azúcar</li>
-      </ul>
-    </section>
+    <!-- Navigation Tabs -->
+    <div class="bg-blue-900/60 border-t border-white/10 backdrop-blur-sm">
+      <div class="max-w-6xl mx-auto px-2 flex overflow-x-auto no-scrollbar scroll-smooth py-2 gap-1" id="day-tabs">
+        <button onclick="filterDay('todos')" id="tab-todos" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all bg-white text-blue-900 shadow">
+          <i class="fa-solid fa-border-all mr-1"></i> Todos
+        </button>
+        <button onclick="filterDay('lunes')" id="tab-lunes" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium text-blue-100 hover:bg-white/10 whitespace-nowrap transition-all">Lunes</button>
+        <button onclick="filterDay('martes')" id="tab-martes" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium text-blue-100 hover:bg-white/10 whitespace-nowrap transition-all">Martes</button>
+        <button onclick="filterDay('miercoles')" id="tab-miercoles" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium text-blue-100 hover:bg-white/10 whitespace-nowrap transition-all">Miércoles</button>
+        <button onclick="filterDay('jueves')" id="tab-jueves" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium text-blue-100 hover:bg-white/10 whitespace-nowrap transition-all">Jueves</button>
+        <button onclick="filterDay('viernes')" id="tab-viernes" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium text-blue-100 hover:bg-white/10 whitespace-nowrap transition-all">Viernes</button>
+        <button onclick="filterDay('sabado')" id="tab-sabado" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium text-blue-100 hover:bg-white/10 whitespace-nowrap transition-all">Sábado</button>
+        <button onclick="filterDay('domingo')" id="tab-domingo" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium text-blue-100 hover:bg-white/10 whitespace-nowrap transition-all">Domingo</button>
+      </div>
+    </div>
+  </header>
 
-    <!-- Menú Semanal -->
-    <main class="grid">
+  <main class="max-w-6xl mx-auto px-4 mt-6 flex-grow space-y-6">
+
+    <!-- Widgets Section: Desayuno + Hidratación -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+      <!-- Desayuno Fijo Diario -->
+      <div class="md:col-span-2 bg-gradient-to-br from-indigo-50 to-blue-50 border border-indigo-100 rounded-2xl p-5 shadow-sm">
+        <div class="flex items-center justify-between border-b border-indigo-100 pb-3 mb-3">
+          <h2 class="text-base font-bold text-indigo-900 flex items-center gap-2">
+            <i class="fa-solid fa-mug-hot text-indigo-600"></i> Desayuno Fijo Diario
+          </h2>
+          <span class="bg-indigo-600 text-white text-xs font-extrabold px-2.5 py-1 rounded-full shadow-sm">~270 kcal</span>
+        </div>
+        <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-indigo-950">
+          <li class="flex items-center gap-2 bg-white/70 p-2 rounded-lg border border-indigo-50">
+            <i class="fa-solid fa-bread-slice text-amber-600"></i> 70 g de pan 100% integral
+          </li>
+          <li class="flex items-center gap-2 bg-white/70 p-2 rounded-lg border border-indigo-50">
+            <i class="fa-solid fa-drumstick-bite text-rose-500"></i> 40 g de pechuga de pavo
+          </li>
+          <li class="flex items-center gap-2 bg-white/70 p-2 rounded-lg border border-indigo-50">
+            <i class="fa-solid fa-bottle-droplet text-emerald-600"></i> 5 g (1 cdta) de AOVE
+          </li>
+          <li class="flex items-center gap-2 bg-white/70 p-2 rounded-lg border border-indigo-50">
+            <i class="fa-solid fa-coffee text-amber-800"></i> 200 ml de café americano
+          </li>
+        </ul>
+      </div>
+
+      <!-- Control de Agua / Hidratación -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+          <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
+            <i class="fa-solid fa-glass-water text-cyan-500"></i> Hidratación
+          </h2>
+          <span id="water-count" class="text-xs font-bold bg-cyan-100 text-cyan-800 px-2 py-1 rounded-full">0 / 8 vasos</span>
+        </div>
+        <div class="flex justify-center items-center gap-1 my-2" id="water-glasses">
+          <!-- Generado dinámicamente con JS -->
+        </div>
+        <div class="flex gap-2 mt-2">
+          <button onclick="addWater(-1)" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-1.5 rounded-lg text-xs font-bold transition">
+            <i class="fa-solid fa-minus"></i>
+          </button>
+          <button onclick="addWater(1)" class="flex-1 bg-cyan-500 hover:bg-cyan-600 text-white py-1.5 rounded-lg text-xs font-bold shadow-sm transition">
+            <i class="fa-solid fa-plus"></i> Añadir
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Días del Menú -->
+    <div id="days-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
       <!-- Lunes -->
-      <article class="day-card">
-        <div class="day-header">
-          <h3 class="day-title">Lunes</h3>
-          <span class="badge">~1.095 kcal</span>
-        </div>
-        <div class="meal-block">
-          <span class="meal-label">Comida <span>~440 kcal</span></span>
-          <span class="meal-desc">200 g de lentejas estofadas con verduras (cebolla, zanahoria, pimiento) <span class="frozen">(Congelador)</span> + ensalada de 100 g de lechuga iceberg y 100 g de tomate aliñada con 5 g de AOVE.</span>
-        </div>
-        <div class="meal-block">
-          <span class="meal-label">Merienda <span>~125 kcal</span></span>
-          <span class="meal-desc">1 natilla proteica (120 g — 125 kcal).</span>
-        </div>
-        <div class="meal-block">
-          <span class="meal-label">Cena <span>~260 kcal</span></span>
-          <span class="meal-desc">Tortilla francesa (1 huevo + 1 clara) con 100 g de champiñones al ajillo + 100 g de tomate en rodajas con orégano y 5 g de AOVE.</span>
+      <article class="day-card day-lunes bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition duration-200 flex flex-col justify-between">
+        <div>
+          <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
+            <h3 class="font-bold text-lg text-slate-800 flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-blue-600 inline-block"></span> Lunes
+            </h3>
+            <span class="text-xs font-extrabold bg-blue-50 text-blue-700 border border-blue-200 px-2.5 py-1 rounded-full">~1.095 kcal</span>
+          </div>
+
+          <div class="space-y-4">
+            <!-- Comida -->
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div class="flex justify-between text-xs font-bold text-slate-500 mb-1">
+                <span class="text-emerald-700 uppercase tracking-wider"><i class="fa-solid fa-utensils mr-1"></i> Comida</span>
+                <span>~440 kcal</span>
+              </div>
+              <p class="text-sm text-slate-700">
+                200 g de lentejas estofadas con verduras <span class="inline-flex items-center text-xs font-semibold text-sky-600 bg-sky-50 px-1.5 py-0.5 rounded border border-sky-200"><i class="fa-solid fa-snowflake mr-1"></i>Congelador</span> + ensalada de 100 g de lechuga y 100 g de tomate con 5 g de AOVE.
+              </p>
+            </div>
+
+            <!-- Merienda -->
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div class="flex justify-between text-xs font-bold text-slate-500 mb-1">
+                <span class="text-amber-700 uppercase tracking-wider"><i class="fa-solid fa-apple-whole mr-1"></i> Merienda</span>
+                <span>~125 kcal</span>
+              </div>
+              <p class="text-sm text-slate-700">1 natilla proteica (120 g — 125 kcal).</p>
+            </div>
+
+            <!-- Cena -->
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div class="flex justify-between text-xs font-bold text-slate-500 mb-1">
+                <span class="text-indigo-700 uppercase tracking-wider"><i class="fa-solid fa-moon mr-1"></i> Cena</span>
+                <span>~260 kcal</span>
+              </div>
+              <p class="text-sm text-slate-700">
+                Tortilla francesa (1 huevo + 1 clara) con 100 g de champiñones al ajillo + 100 g de tomate en rodajas con orégano y 5 g de AOVE.
+              </p>
+            </div>
+          </div>
         </div>
       </article>
 
       <!-- Martes -->
-      <article class="day-card">
-        <div class="day-header">
-          <h3 class="day-title">Martes</h3>
-          <span class="badge">~1.080 kcal</span>
-        </div>
-        <div class="meal-block">
-          <span class="meal-label">Comida <span>~450 kcal</span></span>
-          <span class="meal-desc">140 g de lomo de merluza al papillote en airfryer u horno <span class="frozen">(Congelador)</span> + 90 g de patata cocida y 100 g de pimiento rojo asado con 5 g de AOVE.</span>
-        </div>
-        <div class="meal-block">
-          <span class="meal-label">Merienda <span>~90 kcal</span></span>
-          <span class="meal-desc">120 g de yogur proteico 0% + 120 g de fresas.</span>
-        </div>
-        <div class="meal-block">
-          <span class="meal-label">Cena <span>~270 kcal</span></span>
-          <span class="meal-desc">130 g de calamares a la plancha con ajo y perejil <span class="frozen">(Congelador)</span> + ensalada de 100 g de lechuga iceberg y 50 g de pepino con 5 g de AOVE.</span>
+      <article class="day-card day-martes bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition duration-200 flex flex-col justify-between">
+        <div>
+          <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
+            <h3 class="font-bold text-lg text-slate-800 flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-blue-600 inline-block"></span> Martes
+            </h3>
+            <span class="text-xs font-extrabold bg-blue-50 text-blue-700 border border-blue-200 px-2.5 py-1 rounded-full">~1.080 kcal</span>
+          </div>
+
+          <div class="space-y-4">
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div class="flex justify-between text-xs font-bold text-slate-500 mb-1">
+                <span class="text-emerald-700 uppercase tracking-wider"><i class="fa-solid fa-utensils mr-1"></i> Comida</span>
+                <span>~450 kcal</span>
+              </div>
+              <p class="text-sm text-slate-700">
+                140 g de lomo de merluza al papillote <span class="inline-flex items-center text-xs font-semibold text-sky-600 bg-sky-50 px-1.5 py-0.5 rounded border border-sky-200"><i class="fa-solid fa-snowflake mr-1"></i>Congelador</span> + 90 g de patata cocida y 100 g de pimiento rojo asado con 5 g de AOVE.
+              </p>
+            </div>
+
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div class="flex justify-between text-xs font-bold text-slate-500 mb-1">
+                <span class="text-amber-700 uppercase tracking-wider"><i class="fa-solid fa-apple-whole mr-1"></i> Merienda</span>
+                <span>~90 kcal</span>
+              </div>
+              <p class="text-sm text-slate-700">120 g de yogur proteico 0% + 120 g de fresas.</p>
+            </div>
+
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div class="flex justify-between text-xs font-bold text-slate-500 mb-1">
+                <span class="text-indigo-700 uppercase tracking-wider"><i class="fa-solid fa-moon mr-1"></i> Cena</span>
+                <span>~270 kcal</span>
+              </div>
+              <p class="text-sm text-slate-700">
+                130 g de calamares a la plancha con ajo y perejil <span class="inline-flex items-center text-xs font-semibold text-sky-600 bg-sky-50 px-1.5 py-0.5 rounded border border-sky-200"><i class="fa-solid fa-snowflake mr-1"></i>Congelador</span> + ensalada de 100 g de lechuga y 50 g de pepino con 5 g de AOVE.
+              </p>
+            </div>
+          </div>
         </div>
       </article>
 
       <!-- Miércoles -->
-      <article class="day-card">
-        <div class="day-header">
-          <h3 class="day-title">Miércoles</h3>
-          <span class="badge">~1.100 kcal</span>
-        </div>
-        <div class="meal-block">
-          <span class="meal-label">Comida <span>~470 kcal</span></span>
-          <span class="meal-desc">140 g de solomillo de cerdo a la plancha <span class="frozen">(Congelador)</span> + salteado de 100 g de brócoli y 100 g de coliflor <span class="frozen">(Congelador)</span> con ajo y 5 g de AOVE.</span>
-        </div>
-        <div class="meal-block">
-          <span class="meal-label">Merienda <span>~100 kcal</span></span>
-          <span class="meal-desc">120 g de yogur proteico 0% + 100 g de manzana.</span>
-        </div>
-        <div class="meal-block">
-          <span class="meal-label">Cena <span>~260 kcal</span></span>
-          <span class="meal-desc">120 g de pechuga de pollo a la plancha + 150 g de pimientos variados (rojo y verde) salteados a la sartén con 5 g de AOVE.</span>
+      <article class="day-card day-miercoles bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition duration-200 flex flex-col justify-between">
+        <div>
+          <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
+            <h3 class="font-bold text-lg text-slate-800 flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-blue-600 inline-block"></span> Miércoles
+            </h3>
+            <span class="text-xs font-extrabold bg-blue-50 text-blue-700 border border-blue-200 px-2.5 py-1 rounded-full">~1.100 kcal</span>
+          </div>
+
+          <div class="space-y-4">
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div class="flex justify-between text-xs font-bold text-slate-500 mb-1">
+                <span class="text-emerald-700 uppercase tracking-wider"><i class="fa-solid fa-utensils mr-1"></i> Comida</span>
+                <span>~470 kcal</span>
+              </div>
+              <p class="text-sm text-slate-700">
+                140 g de solomillo de cerdo <span class="inline-flex items-center text-xs font-semibold text-sky-600 bg-sky-50 px-1.5 py-0.5 rounded border border-sky-200"><i class="fa-solid fa-snowflake mr-1"></i>Congelador</span> + salteado de 100 g de brócoli y 100 g de coliflor <span class="inline-flex items-center text-xs font-semibold text-sky-600 bg-sky-50 px-1.5 py-0.5 rounded border border-sky-200"><i class="fa-solid fa-snowflake mr-1"></i>Congelador</span> con ajo y 5 g de AOVE.
+              </p>
+            </div>
+
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div class="flex justify-between text-xs font-bold text-slate-500 mb-1">
+                <span class="text-amber-700 uppercase tracking-wider"><i class="fa-solid fa-apple-whole mr-1"></i> Merienda</span>
+                <span>~100 kcal</span>
+              </div>
+              <p class="text-sm text-slate-700">120 g de yogur proteico 0% + 100 g de manzana.</p>
+            </div>
+
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div class="flex justify-between text-xs font-bold text-slate-500 mb-1">
+                <span class="text-indigo-700 uppercase tracking-wider"><i class="fa-solid fa-moon mr-1"></i> Cena</span>
+                <span>~260 kcal</span>
+              </div>
+              <p class="text-sm text-slate-700">
+                120 g de pechuga de pollo a la plancha + 150 g de pimientos variados salteados con 5 g de AOVE.
+              </p>
+            </div>
+          </div>
         </div>
       </article>
 
       <!-- Jueves -->
-      <article class="day-card">
-        <div class="day-header">
-          <h3 class="day-title">Jueves</h3>
-          <span class="badge">~1.105 kcal</span>
-        </div>
-        <div class="meal-block">
-          <span class="meal-label">Comida <span>~460 kcal</span></span>
-          <span class="meal-desc">140 g de pollo al horno/airfryer (aprovechando muslo y pechuga) <span class="frozen">(Congelador)</span> + salteado de 100 g de guisantes <span class="frozen">(Congelador)</span> y 50 g de zanahoria con 5 g de AOVE.</span>
-        </div>
-        <div class="meal-block">
-          <span class="meal-label">Merienda <span>~125 kcal</span></span>
-          <span class="meal-desc">1 natilla proteica (120 g — 125 kcal).</span>
-        </div>
-        <div class="meal-block">
-          <span class="meal-label">Cena <span>~250 kcal</span></span>
-          <span class="meal-desc">Revoltillo de 1 huevo + 2 claras con 100 g de judías verdes <span class="frozen">(Congelador)</span> y 20 g de bacon en taquitos salteados <span class="frozen">(Congelador)</span> con 5 g de AOVE.</span>
+      <article class="day-card day-jueves bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition duration-200 flex flex-col justify-between">
+        <div>
+          <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
+            <h3 class="font-bold text-lg text-slate-800 flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-blue-600 inline-block"></span> Jueves
+            </h3>
+            <span class="text-xs font-extrabold bg-blue-50 text-blue-700 border border-blue-200 px-2.5 py-1 rounded-full">~1.105 kcal</span>
+          </div>
+
+          <div class="space-y-4">
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div class="flex justify-between text-xs font-bold text-slate-500 mb-1">
+                <span class="text-emerald-700 uppercase tracking-wider"><i class="fa-solid fa-utensils mr-1"></i> Comida</span>
+                <span>~460 kcal</span>
+              </div>
+              <p class="text-sm text-slate-700">
+                140 g de pollo al horno/airfryer <span class="inline-flex items-center text-xs font-semibold text-sky-600 bg-sky-50 px-1.5 py-0.5 rounded border border-sky-200"><i class="fa-solid fa-snowflake mr-1"></i>Congelador</span> + salteado de 100 g de guisantes <span class="inline-flex items-center text-xs font-semibold text-sky-600 bg-sky-50 px-1.5 py-0.5 rounded border border-sky-200"><i class="fa-solid fa-snowflake mr-1"></i>Congelador</span> y 50 g de zanahoria con 5 g de AOVE.
+              </p>
+            </div>
+
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div class="flex justify-between text-xs font-bold text-slate-500 mb-1">
+                <span class="text-amber-700 uppercase tracking-wider"><i class="fa-solid fa-apple-whole mr-1"></i> Merienda</span>
+                <span>~125 kcal</span>
+              </div>
+              <p class="text-sm text-slate-700">1 natilla proteica (120 g — 125 kcal).</p>
+            </div>
+
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div class="flex justify-between text-xs font-bold text-slate-500 mb-1">
+                <span class="text-indigo-700 uppercase tracking-wider"><i class="fa-solid fa-moon mr-1"></i> Cena</span>
+                <span>~250 kcal</span>
+              </div>
+              <p class="text-sm text-slate-700">
+                Revoltillo de 1 huevo + 2 claras con 100 g de judías verdes <span class="inline-flex items-center text-xs font-semibold text-sky-600 bg-sky-50 px-1.5 py-0.5 rounded border border-sky-200"><i class="fa-solid fa-snowflake mr-1"></i>Congelador</span> y 20 g de bacon <span class="inline-flex items-center text-xs font-semibold text-sky-600 bg-sky-50 px-1.5 py-0.5 rounded border border-sky-200"><i class="fa-solid fa-snowflake mr-1"></i>Congelador</span> con 5 g de AOVE.
+              </p>
+            </div>
+          </div>
         </div>
       </article>
 
       <!-- Viernes -->
-      <article class="day-card">
-        <div class="day-header">
-          <h3 class="day-title">Viernes</h3>
-          <span class="badge">~1.100 kcal</span>
-        </div>
-        <div class="meal-block">
-          <span class="meal-label">Comida <span>~440 kcal</span></span>
-          <span class="meal-desc">Berenjena rellena: 140 g de carne picada <span class="frozen">(Congelador)</span> rehogada con 100 g de tomate natural triturado sobre 150 g de berenjena al horno y 5 g de AOVE.</span>
-        </div>
-        <div class="meal-block">
-          <span class="meal-label">Merienda <span>~85 kcal</span></span>
-          <span class="meal-desc">125 g de yogur natural 0% + 150 g de melón o sandía.</span>
-        </div>
-        <div class="meal-block">
-          <span class="meal-label">Cena <span>~305 kcal</span></span>
-          <span class="meal-desc">Pizza casera de centeno: masa con 40 g de harina de centeno + 50 g de tomate natural + 50 g de pechuga de pavo/pollo + 15 g de bacon <span class="frozen">(Congelador)</span> + 30 g de queso fresco 0% o rallado ligero y orégano.</span>
+      <article class="day-card day-viernes bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition duration-200 flex flex-col justify-between">
+        <div>
+          <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
+            <h3 class="font-bold text-lg text-slate-800 flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-blue-600 inline-block"></span> Viernes
+            </h3>
+            <span class="text-xs font-extrabold bg-blue-50 text-blue-700 border border-blue-200 px-2.5 py-1 rounded-full">~1.100 kcal</span>
+          </div>
+
+          <div class="space-y-4">
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div class="flex justify-between text-xs font-bold text-slate-500 mb-1">
+                <span class="text-emerald-700 uppercase tracking-wider"><i class="fa-solid fa-utensils mr-1"></i> Comida</span>
+                <span>~440 kcal</span>
+              </div>
+              <p class="text-sm text-slate-700">
+                Berenjena rellena: 140 g de carne picada <span class="inline-flex items-center text-xs font-semibold text-sky-600 bg-sky-50 px-1.5 py-0.5 rounded border border-sky-200"><i class="fa-solid fa-snowflake mr-1"></i>Congelador</span> con 100 g de tomate natural sobre 150 g de berenjena al horno y 5 g de AOVE.
+              </p>
+            </div>
+
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div class="flex justify-between text-xs font-bold text-slate-500 mb-1">
+                <span class="text-amber-700 uppercase tracking-wider"><i class="fa-solid fa-apple-whole mr-1"></i> Merienda</span>
+                <span>~85 kcal</span>
+              </div>
+              <p class="text-sm text-slate-700">125 g de yogur natural 0% + 150 g de melón o sandía.</p>
+            </div>
+
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div class="flex justify-between text-xs font-bold text-slate-500 mb-1">
+                <span class="text-indigo-700 uppercase tracking-wider"><i class="fa-solid fa-moon mr-1"></i> Cena</span>
+                <span>~305 kcal</span>
+              </div>
+              <p class="text-sm text-slate-700">
+                Pizza casera de centeno: 40 g harina centeno + 50 g tomate + 50 g pavo/pollo + 15 g bacon <span class="inline-flex items-center text-xs font-semibold text-sky-600 bg-sky-50 px-1.5 py-0.5 rounded border border-sky-200"><i class="fa-solid fa-snowflake mr-1"></i>Congelador</span> + 30 g queso fresco 0% y orégano.
+              </p>
+            </div>
+          </div>
         </div>
       </article>
 
       <!-- Sábado -->
-      <article class="day-card">
-        <div class="day-header">
-          <h3 class="day-title">Sábado</h3>
-          <span class="badge">~1.090 kcal</span>
-        </div>
-        <div class="meal-block">
-          <span class="meal-label">Comida <span>~470 kcal</span></span>
-          <span class="meal-desc">1,5 hamburguesas a la plancha (aprox. 130 g) <span class="frozen">(Congelador)</span> + 100 g de judías verdes salteadas <span class="frozen">(Congelador)</span> y 90 g de patata pequeña cocida con 5 g de AOVE.</span>
-        </div>
-        <div class="meal-block">
-          <span class="meal-label">Merienda <span>~100 kcal</span></span>
-          <span class="meal-desc">125 g de yogur desnatado + 100 g de pera.</span>
-        </div>
-        <div class="meal-block">
-          <span class="meal-label">Cena <span>~250 kcal</span></span>
-          <span class="meal-desc">250 g de crema de calabacín y coliflor <span class="frozen">(Congelador)</span> servida caliente con 1 huevo duro picado + ensalada de 100 g de tomate con orégano y 5 g de AOVE (Sin pescado).</span>
+      <article class="day-card day-sabado bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition duration-200 flex flex-col justify-between">
+        <div>
+          <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
+            <h3 class="font-bold text-lg text-slate-800 flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-blue-600 inline-block"></span> Sábado
+            </h3>
+            <span class="text-xs font-extrabold bg-blue-50 text-blue-700 border border-blue-200 px-2.5 py-1 rounded-full">~1.090 kcal</span>
+          </div>
+
+          <div class="space-y-4">
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div class="flex justify-between text-xs font-bold text-slate-500 mb-1">
+                <span class="text-emerald-700 uppercase tracking-wider"><i class="fa-solid fa-utensils mr-1"></i> Comida</span>
+                <span>~470 kcal</span>
+              </div>
+              <p class="text-sm text-slate-700">
+                1,5 hamburguesas (130 g) <span class="inline-flex items-center text-xs font-semibold text-sky-600 bg-sky-50 px-1.5 py-0.5 rounded border border-sky-200"><i class="fa-solid fa-snowflake mr-1"></i>Congelador</span> + 100 g de judías verdes <span class="inline-flex items-center text-xs font-semibold text-sky-600 bg-sky-50 px-1.5 py-0.5 rounded border border-sky-200"><i class="fa-solid fa-snowflake mr-1"></i>Congelador</span> y 90 g de patata cocida con 5 g de AOVE.
+              </p>
+            </div>
+
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div class="flex justify-between text-xs font-bold text-slate-500 mb-1">
+                <span class="text-amber-700 uppercase tracking-wider"><i class="fa-solid fa-apple-whole mr-1"></i> Merienda</span>
+                <span>~100 kcal</span>
+              </div>
+              <p class="text-sm text-slate-700">125 g de yogur desnatado + 100 g de pera.</p>
+            </div>
+
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div class="flex justify-between text-xs font-bold text-slate-500 mb-1">
+                <span class="text-indigo-700 uppercase tracking-wider"><i class="fa-solid fa-moon mr-1"></i> Cena</span>
+                <span>~250 kcal</span>
+              </div>
+              <p class="text-sm text-slate-700">
+                250 g crema calabacín y coliflor <span class="inline-flex items-center text-xs font-semibold text-sky-600 bg-sky-50 px-1.5 py-0.5 rounded border border-sky-200"><i class="fa-solid fa-snowflake mr-1"></i>Congelador</span> con 1 huevo duro + ensalada 100 g tomate con orégano y 5 g AOVE (Sin pescado).
+              </p>
+            </div>
+          </div>
         </div>
       </article>
 
       <!-- Domingo -->
-      <article class="day-card">
-        <div class="day-header">
-          <h3 class="day-title">Domingo</h3>
-          <span class="badge">~1.110 kcal</span>
-        </div>
-        <div class="meal-block">
-          <span class="meal-label">Comida <span>~480 kcal</span></span>
-          <span class="meal-desc">130 g de lomo de salmón a la plancha o en airfryer <span class="frozen">(Congelador)</span> + 100 g de champiñones y 80 g de brócoli <span class="frozen">(Congelador)</span> salteados con 5 g de AOVE.</span>
-        </div>
-        <div class="meal-block">
-          <span class="meal-label">Merienda <span>~100 kcal</span></span>
-          <span class="meal-desc">120 g de yogur proteico + 120 g de naranja.</span>
-        </div>
-        <div class="meal-block">
-          <span class="meal-label">Cena <span>~260 kcal</span></span>
-          <span class="meal-desc">140 g de lomo de cerdo a la plancha <span class="frozen">(Congelador)</span> + 150 g de pimiento asado o tomate a la parrilla con 5 g de AOVE.</span>
+      <article class="day-card day-domingo bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition duration-200 flex flex-col justify-between">
+        <div>
+          <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
+            <h3 class="font-bold text-lg text-slate-800 flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-blue-600 inline-block"></span> Domingo
+            </h3>
+            <span class="text-xs font-extrabold bg-blue-50 text-blue-700 border border-blue-200 px-2.5 py-1 rounded-full">~1.110 kcal</span>
+          </div>
+
+          <div class="space-y-4">
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div class="flex justify-between text-xs font-bold text-slate-500 mb-1">
+                <span class="text-emerald-700 uppercase tracking-wider"><i class="fa-solid fa-utensils mr-1"></i> Comida</span>
+                <span>~480 kcal</span>
+              </div>
+              <p class="text-sm text-slate-700">
+                130 g lomo de salmón <span class="inline-flex items-center text-xs font-semibold text-sky-600 bg-sky-50 px-1.5 py-0.5 rounded border border-sky-200"><i class="fa-solid fa-snowflake mr-1"></i>Congelador</span> + 100 g champiñones y 80 g brócoli <span class="inline-flex items-center text-xs font-semibold text-sky-600 bg-sky-50 px-1.5 py-0.5 rounded border border-sky-200"><i class="fa-solid fa-snowflake mr-1"></i>Congelador</span> salteados con 5 g de AOVE.
+              </p>
+            </div>
+
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div class="flex justify-between text-xs font-bold text-slate-500 mb-1">
+                <span class="text-amber-700 uppercase tracking-wider"><i class="fa-solid fa-apple-whole mr-1"></i> Merienda</span>
+                <span>~100 kcal</span>
+              </div>
+              <p class="text-sm text-slate-700">120 g de yogur proteico + 120 g de naranja.</p>
+            </div>
+
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div class="flex justify-between text-xs font-bold text-slate-500 mb-1">
+                <span class="text-indigo-700 uppercase tracking-wider"><i class="fa-solid fa-moon mr-1"></i> Cena</span>
+                <span>~260 kcal</span>
+              </div>
+              <p class="text-sm text-slate-700">
+                140 g de lomo de cerdo <span class="inline-flex items-center text-xs font-semibold text-sky-600 bg-sky-50 px-1.5 py-0.5 rounded border border-sky-200"><i class="fa-solid fa-snowflake mr-1"></i>Congelador</span> + 150 g de pimiento asado o tomate a la parrilla con 5 g de AOVE.
+              </p>
+            </div>
+          </div>
         </div>
       </article>
 
-    </main>
+    </div>
 
-    <footer>
-      <p>Todos los valores calóricos e ingredientes están calculados de forma individual por persona.</p>
-    </footer>
-  </div>
+  </main>
 
+  <footer class="max-w-6xl mx-auto px-4 mt-12 text-center text-xs text-slate-400">
+    <p>Plan Nutricional Alojado en GitHub Pages • Optimizado para móvil y escritorio</p>
+  </footer>
+
+  <!-- Embedded JavaScript Logic -->
+  <script>
+    const daysMap = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
+
+    // Detección del día actual
+    document.addEventListener('DOMContentLoaded', () => {
+      const todayIndex = new Date().getDay();
+      const todayName = daysMap[todayIndex];
+
+      const badgeElem = document.getElementById('current-day-name');
+      if (badgeElem) {
+        badgeElem.textContent = todayName === 'miercoles' ? 'Miércoles' : todayName;
+      }
+
+      // Renderizar vasos de agua
+      updateWaterUI();
+
+      // Seleccionar automáticamente el día actual si se desea o mostrar todos
+      filterDay('todos');
+    });
+
+    // Filtrado de pestañas
+    function filterDay(day) {
+      const cards = document.querySelectorAll('.day-card');
+      const tabs = document.querySelectorAll('.tab-btn');
+
+      // Actualizar pestañas
+      tabs.forEach(tab => {
+        tab.classList.remove('bg-white', 'text-blue-900', 'shadow');
+        tab.classList.add('text-blue-100', 'hover:bg-white/10');
+      });
+
+      const activeTab = document.getElementById(`tab-${day}`);
+      if (activeTab) {
+        activeTab.classList.add('bg-white', 'text-blue-900', 'shadow');
+        activeTab.classList.remove('text-blue-100', 'hover:bg-white/10');
+      }
+
+      // Filtrar tarjetas
+      cards.forEach(card => {
+        if (day === 'todos') {
+          card.classList.remove('hidden');
+        } else {
+          if (card.classList.contains(`day-${day}`)) {
+            card.classList.remove('hidden');
+          } else {
+            card.classList.add('hidden');
+          }
+        }
+      });
+    }
+
+    // Contador de Hidratación con LocalStorage
+    let waterCount = parseInt(localStorage.getItem('diet_water_count') || '0', 10);
+
+    function addWater(amount) {
+      waterCount = Math.max(0, Math.min(8, waterCount + amount));
+      localStorage.setItem('diet_water_count', waterCount.toString());
+      updateWaterUI();
+    }
+
+    function updateWaterUI() {
+      const container = document.getElementById('water-glasses');
+      const countLabel = document.getElementById('water-count');
+      
+      if (!container || !countLabel) return;
+      
+      countLabel.textContent = `${waterCount} / 8 vasos`;
+      container.innerHTML = '';
+
+      for (let i = 1; i <= 8; i++) {
+        const icon = document.createElement('i');
+        if (i <= waterCount) {
+          icon.className = 'fa-solid fa-glass-water text-cyan-500 text-lg transition-transform duration-200 scale-110';
+        } else {
+          icon.className = 'fa-solid fa-glass-water-none text-slate-200 text-lg';
+        }
+        container.appendChild(icon);
+      }
+    }
+  </script>
 </body>
 </html>
