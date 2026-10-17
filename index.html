@@ -268,6 +268,39 @@
       font-size: 0.85rem;
       color: var(--text-muted);
     }
+
+    .week-nav {
+      margin-top: 12px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .week-nav a {
+      display: inline-block;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--primary-hover);
+      background-color: #ffffff;
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 9999px;
+      transition: all 0.2s ease;
+    }
+
+    .week-nav a:hover {
+      background-color: var(--primary-light);
+      border-color: #99f6e4;
+    }
+
+    .week-nav a.current {
+      background-color: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
   </style>
 </head>
 <body>
@@ -277,6 +310,10 @@
       <span class="title-badge">Plan Nutricional 1.100 kcal</span>
       <h1>Menú de Hoy</h1>
       <p class="subtitle"><span id="current-date" class="date-display">Cargando fecha...</span></p>
+      <nav class="week-nav">
+        <a href="index.html" class="current">Semana 1</a>
+        <a href="semana-2.html">Semana 2</a>
+      </nav>
     </header>
 
     <!-- Selector de Días (Navegación) -->
