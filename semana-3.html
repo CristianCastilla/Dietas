@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan Nutricional · Semana 3 · Menú Renovado</title>
+<style>
+  :root {
+    --primary: #15803d;
+    --primary-hover: #166534;
+    --primary-light: #dcfce7;
+    --accent: #f59e0b;
+    --accent-light: #fef3c7;
+    --text-main: #1c2b21;
+    --text-muted: #6b7c72;
+    --card: #ffffff;
+    --border: #e5e7eb;
+    --frozen-bg: #e0f2fe;
+    --frozen-text: #0369a1;
+    --shadow: 0 12px 30px -12px rgba(22, 101, 52, 0.16), 0 4px 10px -6px rgba(0,0,0,0.05);
+    --radius: 18px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 24px 16px 56px;
+    color: var(--text-main);
+    background:
+      radial-gradient(circle at 12% 0%, #dcfce7 0%, transparent 42%),
+      radial-gradient(circle at 92% 8%, #fef3c7 0%, transparent 38%),
+      linear-gradient(180deg, #f8fdf9 0%, #fbfaf5 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+  .container { max-width: 760px; margin: 0 auto; }
+
+  header { text-align: center; margin-bottom: 22px; }
+  .title-badge {
+    display: inline-block;
+    background: var(--primary);
+    color: #fff;
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 9999px;
+    margin-bottom: 10px;
+  }
+  h1 { font-size: 2.1rem; margin: 0 0 4px; font-weight: 800; letter-spacing: -0.02em; }
+  .subtitle { margin: 0; color: var(--text-muted); font-size: 0.95rem; }
+  .date-display { color: var(--primary); font-weight: 700; }
+
+  .week-nav { margin-top: 14px; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+  .week-nav a {
+    text-decoration: none; font-size: 0.82rem; font-weight: 700;
+    color: var(--primary-hover); background: #fff; border: 1px solid var(--border);
+    padding: 6px 14px; border-radius: 9999px; transition: all 0.18s ease;
+  }
+  .week-nav a:hover { background: var(--primary-light); border-color: #86efac; }
+  .week-nav a.current { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+  /* Selector de días */
+  .day-selector {
+    display: flex; gap: 6px; background: #fff; padding: 6px;
+    border-radius: 16px; border: 1px solid var(--border);
+    box-shadow: 0 4px 14px -8px rgba(0,0,0,0.15);
+    margin-bottom: 22px; overflow-x: auto;
+  }
+  .tab-btn {
+    flex: 1; min-width: 54px; padding: 10px 8px; border: none; background: transparent;
+    color: var(--text-muted); font-weight: 800; font-size: 0.86rem; border-radius: 11px;
+    cursor: pointer; transition: all 0.18s ease; white-space: nowrap; font-family: inherit;
+  }
+  .tab-btn:hover { background: #f1f5f9; color: var(--text-main); }
+  .tab-btn.active { background: var(--primary); color: #fff; box-shadow: 0 8px 18px -8px rgba(21,128,61,0.7); }
+
+  /* Desayuno */
+  .breakfast-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+    border: 1px solid #bbf7d0; border-radius: var(--radius);
+    padding: 20px 24px; margin-bottom: 22px; box-shadow: var(--shadow);
+  }
+  .breakfast-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .breakfast-title { font-size: 1.1rem; font-weight: 800; color: var(--primary-hover); margin: 0; }
+  .badge-kcal {
+    background: var(--accent-light); color: #b45309; font-size: 0.78rem;
+    font-weight: 800; padding: 4px 12px; border-radius: 9999px; white-space: nowrap;
+  }
+  .breakfast-list {
+    margin: 0; padding: 0; list-style: none; display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 8px;
+  }
+  .breakfast-list li { font-size: 0.92rem; color: #334155; display: flex; align-items: center; gap: 8px; }
+  .breakfast-list li::before { content: "•"; color: var(--primary); font-size: 1.5rem; line-height: 0; }
+
+  /* Tarjetas de día */
+  .day-card {
+    display: none; background: var(--card); border-radius: var(--radius);
+    padding: 26px; border: 1px solid var(--border); box-shadow: var(--shadow);
+  }
+  .day-card.active { display: flex; flex-direction: column; gap: 18px; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .day-card-header {
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    border-bottom: 2px solid #f1f5f9; padding-bottom: 14px; flex-wrap: wrap;
+  }
+  .day-card-title { font-size: 1.55rem; font-weight: 800; margin: 0; letter-spacing: -0.02em; }
+
+  .meal-block {
+    background: #f8fafc; border-left: 4px solid var(--primary);
+    border-radius: 10px 14px 14px 10px; padding: 16px 20px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .meal-header { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .meal-name { font-weight: 800; font-size: 1.02rem; }
+  .meal-calories { font-size: 0.82rem; font-weight: 800; color: var(--primary-hover); white-space: nowrap; }
+  .meal-desc { font-size: 0.95rem; color: #475569; }
+  .frozen {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--frozen-bg); color: var(--frozen-text);
+    font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 6px; margin-left: 4px;
+  }
+
+  /* Resumen semanal */
+  .summary { margin-top: 26px; }
+  .summary h2 { font-size: 1.1rem; margin: 0 0 12px; font-weight: 800; }
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(88px, 1fr)); gap: 8px; }
+  .sum-day {
+    background: #fff; border: 1px solid var(--border); border-radius: 12px;
+    padding: 10px 8px; text-align: center; font-size: 0.78rem; color: var(--text-muted);
+  }
+  .sum-day strong { display: block; font-size: 0.92rem; color: var(--text-main); margin-bottom: 2px; }
+
+  /* Lista de la compra */
+  .shopping { margin-top: 30px; background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 26px; box-shadow: var(--shadow); }
+  .shopping h2 { font-size: 1.2rem; margin: 0 0 4px; font-weight: 800; }
+  .shopping .hint { font-size: 0.82rem; color: var(--text-muted); margin: 0 0 18px; }
+  .shop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
+  .shop-cat h3 { font-size: 0.86rem; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 8px; color: var(--primary-hover); }
+  .shop-cat ul { margin: 0; padding-left: 18px; font-size: 0.9rem; color: #334155; }
+  .shop-cat li { margin-bottom: 3px; }
+
+  footer { text-align: center; margin-top: 30px; font-size: 0.82rem; color: var(--text-muted); }
+  .pill { display: inline-block; background: var(--primary-light); color: var(--primary-hover); font-size: 0.72rem; font-weight: 800; padding: 3px 9px; border-radius: 9999px; }
+
+  @media (max-width: 520px) {
+    h1 { font-size: 1.7rem; }
+    .day-card { padding: 20px 16px; }
+    .day-card-title { font-size: 1.3rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <span class="title-badge">Semana 3 · Menú renovado</span>
+    <h1>Mi Plan Nutricional</h1>
+    <p class="subtitle"><span id="current-date" class="date-display">Cargando fecha...</span></p>
+    <nav class="week-nav">
+      <a href="index.html">Semana 1</a>
+      <a href="semana-2.html">Semana 2</a>
+      <a href="semana-3.html" class="current">Semana 3</a>
+    </nav>
+  </header>
+
+  <nav class="day-selector">
+    <button class="tab-btn" id="tab-lunes" onclick="showDay('lunes')">Lun</button>
+    <button class="tab-btn" id="tab-martes" onclick="showDay('martes')">Mar</button>
+    <button class="tab-btn" id="tab-miercoles" onclick="showDay('miercoles')">Mié</button>
+    <button class="tab-btn" id="tab-jueves" onclick="showDay('jueves')">Jue</button>
+    <button class="tab-btn" id="tab-viernes" onclick="showDay('viernes')">Vie</button>
+    <button class="tab-btn" id="tab-sabado" onclick="showDay('sabado')">Sáb</button>
+    <button class="tab-btn" id="tab-domingo" onclick="showDay('domingo')">Dom</button>
+  </nav>
+
+  <section class="breakfast-card">
+    <div class="breakfast-header">
+      <h2 class="breakfast-title">☕ Desayuno fijo diario</h2>
+      <span class="badge-kcal">~270 kcal</span>
+    </div>
+    <ul class="breakfast-list">
+      <li>70 g de pan 100% integral</li>
+      <li>40 g de pechuga de pavo</li>
+      <li>5 g (1 cdta) de AOVE</li>
+      <li>200 ml de café americano</li>
+    </ul>
+  </section>
+
+  <main>
+
+    <!-- LUNES -->
+    <article class="day-card" id="day-lunes">
+      <div class="day-card-header">
+        <h2 class="day-card-title">Lunes</h2>
+        <span class="badge-kcal">Total: ~1.100 kcal</span>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header"><span class="meal-name">🫘 Comida</span><span class="meal-calories">~440 kcal</span></div>
+        <div class="meal-desc">
+          <strong>Alubias blancas con verduras y pavo:</strong> 200 g de alubias blancas cocidas <span class="frozen">❄️ Congelador</span> con 100 g de calabacín, 50 g de zanahoria y 80 g de pechuga de pavo en taquitos, con 5 g de AOVE.
+        </div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header"><span class="meal-name">🍮 Merienda</span><span class="meal-calories">~125 kcal</span></div>
+        <div class="meal-desc">1 natilla proteica (120 g — 125 kcal).</div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header"><span class="meal-name">🥔 Cena</span><span class="meal-calories">~265 kcal</span></div>
+        <div class="meal-desc">
+          <strong>Tortilla de patata al horno:</strong> 100 g de patata cocida + 1 huevo + 2 claras cuajadas al horno, con ensalada de 100 g de lechuga iceberg y 80 g de tomate y 5 g de AOVE.
+        </div>
+      </div>
+    </article>
+
+    <!-- MARTES -->
+    <article class="day-card" id="day-martes">
+      <div class="day-card-header">
+        <h2 class="day-card-title">Martes</h2>
+        <span class="badge-kcal">Total: ~1.100 kcal</span>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header"><span class="meal-name">🐟 Comida</span><span class="meal-calories">~460 kcal</span></div>
+        <div class="meal-desc">
+          <strong>Salmón al horno con arroz y brócoli:</strong> 130 g de salmón <span class="frozen">❄️ Congelador</span> + 40 g de arroz (en seco) + 100 g de brócoli al vapor, con 5 g de AOVE.
+        </div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header"><span class="meal-name">🍏 Merienda</span><span class="meal-calories">~95 kcal</span></div>
+        <div class="meal-desc">120 g de yogur proteico 0% + 100 g de manzana de temporada.</div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header"><span class="meal-name">🍝 Cena</span><span class="meal-calories">~275 kcal</span></div>
+        <div class="meal-desc">
+          <strong>Macarrones con atún y tomate:</strong> 40 g de macarrones (en seco) con 1 lata de atún al natural (56 g escurrito) y 100 g de tomate natural triturado, con 5 g de AOVE.
+        </div>
+      </div>
+    </article>
+
+    <!-- MIÉRCOLES -->
+    <article class="day-card" id="day-miercoles">
+      <div class="day-card-header">
+        <h2 class="day-card-title">Miércoles</h2>
+        <span class="badge-kcal">Total: ~1.100 kcal</span>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header"><span class="meal-name">🌾 Comida</span><span class="meal-calories">~460 kcal</span></div>
+        <div class="meal-desc">
+          <strong>Couscous con garbanzos y calabacín:</strong> 40 g de couscous (en seco) + 150 g de garbanzos cocidos + 100 g de calabacín y 50 g de zanahoria salteados, con 5 g de AOVE.
+        </div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header"><span class="meal-name">🍮 Merienda</span><span class="meal-calories">~125 kcal</span></div>
+        <div class="meal-desc">1 natilla proteica (120 g — 125 kcal).</div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header"><span class="meal-name">🍳 Cena</span><span class="meal-calories">~245 kcal</span></div>
+        <div class="meal-desc">
+          <strong>Revuelto de pavo y champiñones:</strong> 1 huevo + 2 claras con 100 g de champiñones y 60 g de pavo salteados, más 100 g de lechuga iceberg, con 5 g de AOVE.
+        </div>
+      </div>
+    </article>
+
+    <!-- JUEVES -->
+    <article class="day-card" id="day-jueves">
+      <div class="day-card-header">
+        <h2 class="day-card-title">Jueves</h2>
+        <span class="badge-kcal">Total: ~1.095 kcal</span>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header"><span class="meal-name">🍚 Comida</span><span class="meal-calories">~465 kcal</span></div>
+        <div class="meal-desc">
+          <strong>Arroz con pollo y calabaza:</strong> 40 g de arroz (en seco) con 120 g de pechuga de pollo en dados y 100 g de calabaza asada, con 5 g de AOVE.
+        </div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header"><span class="meal-name">🍐 Merienda</span><span class="meal-calories">~95 kcal</span></div>
+        <div class="meal-desc">120 g de yogur proteico 0% + 100 g de pera de temporada.</div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header"><span class="meal-name">🥦 Cena</span><span class="meal-calories">~265 kcal</span></div>
+        <div class="meal-desc">
+          <strong>Pavo al horno con calabacín y zanahoria:</strong> 120 g de pavo al horno con 150 g de calabacín y 50 g de zanahoria asados, con 5 g de AOVE.
+        </div>
+      </div>
+    </article>
+
+    <!-- VIERNES -->
+    <article class="day-card" id="day-viernes">
+      <div class="day-card-header">
+        <h2 class="day-card-title">Viernes</h2>
+        <span class="badge-kcal">Total: ~1.100 kcal</span>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header"><span class="meal-name">🥗 Comida</span><span class="meal-calories">~445 kcal</span></div>
+        <div class="meal-desc">
+          <strong>Ensalada de pasta con pollo:</strong> 40 g de pasta (en seco) con 120 g de pollo a la plancha, 100 g de tomate, 50 g de pepino y 100 g de lechuga iceberg, con 5 g de AOVE.
+        </div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header"><span class="meal-name">🍊 Merienda</span><span class="meal-calories">~80 kcal</span></div>
+        <div class="meal-desc">125 g de yogur natural 0% + 120 g de mandarina o naranja de temporada.</div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header"><span class="meal-name">🍕 Cena especial</span><span class="meal-calories">~305 kcal</span></div>
+        <div class="meal-desc">
+          <strong>Pizza casera de centeno:</strong> masa con 40 g de harina de centeno + 50 g de tomate natural + 60 g de pechuga de pavo/pollo + 30 g de queso fresco 0% y orégano.
+        </div>
+      </div>
+    </article>
+
+    <!-- SÁBADO -->
+    <article class="day-card" id="day-sabado">
+      <div class="day-card-header">
+        <h2 class="day-card-title">Sábado</h2>
+        <span class="badge-kcal">Total: ~1.095 kcal</span>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header"><span class="meal-name">🍗 Comida</span><span class="meal-calories">~470 kcal</span></div>
+        <div class="meal-desc">
+          <strong>Pollo al horno con patata y brócoli:</strong> 140 g de pollo <span class="frozen">❄️ Congelador</span> + 120 g de patata al horno + 100 g de brócoli, con 5 g de AOVE.
+        </div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header"><span class="meal-name">🍎 Merienda</span><span class="meal-calories">~95 kcal</span></div>
+        <div class="meal-desc">120 g de yogur proteico 0% + 100 g de manzana de temporada.</div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header"><span class="meal-name">🥗 Cena (sin pescado)</span><span class="meal-calories">~260 kcal</span></div>
+        <div class="meal-desc">
+          <strong>Ensalada templada de garbanzos y pavo:</strong> 120 g de garbanzos cocidos + 60 g de pavo + 100 g de lechuga iceberg y 80 g de tomate, con 5 g de AOVE.
+        </div>
+      </div>
+    </article>
+
+    <!-- DOMINGO -->
+    <article class="day-card" id="day-domingo">
+      <div class="day-card-header">
+        <h2 class="day-card-title">Domingo</h2>
+        <span class="badge-kcal">Total: ~1.095 kcal</span>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header"><span class="meal-name">🥩 Comida</span><span class="meal-calories">~465 kcal</span></div>
+        <div class="meal-desc">
+          <strong>Carne picada magra con patata y judías verdes:</strong> 130 g de carne picada magra <span class="frozen">❄️ Congelador</span> + 100 g de patata cocida + 100 g de judías verdes, con 5 g de AOVE.
+        </div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header"><span class="meal-name">🍊 Merienda</span><span class="meal-calories">~95 kcal</span></div>
+        <div class="meal-desc">120 g de yogur desnatado + 120 g de naranja o mandarina de temporada.</div>
+      </div>
+      <div class="meal-block">
+        <div class="meal-header"><span class="meal-name">🍳 Cena (sin pescado)</span><span class="meal-calories">~265 kcal</span></div>
+        <div class="meal-desc">
+          <strong>Tortilla de champiñones y queso fresco:</strong> 1 huevo + 2 claras con 100 g de champiñones y 40 g de queso fresco 0%, más 100 g de lechuga iceberg, con 5 g de AOVE.
+        </div>
+      </div>
+    </article>
+
+  </main>
+
+  <section class="summary">
+    <h2>Resumen semanal</h2>
+    <div class="summary-grid">
+      <div class="sum-day"><strong>Lun</strong>1.100 kcal</div>
+      <div class="sum-day"><strong>Mar</strong>1.100 kcal</div>
+      <div class="sum-day"><strong>Mié</strong>1.100 kcal</div>
+      <div class="sum-day"><strong>Jue</strong>1.095 kcal</div>
+      <div class="sum-day"><strong>Vie</strong>1.100 kcal</div>
+      <div class="sum-day"><strong>Sáb</strong>1.095 kcal</div>
+      <div class="sum-day"><strong>Dom</strong>1.095 kcal</div>
+    </div>
+  </section>
+
+  <section class="shopping">
+    <h2>🛒 Lista de la compra</h2>
+    <p class="hint">Cantidades orientativas para una persona durante toda la semana.</p>
+    <div class="shop-grid">
+      <div class="shop-cat">
+        <h3>Proteínas</h3>
+        <ul>
+          <li>Pechuga de pavo: ~660 g</li>
+          <li>Pechuga de pollo: ~380 g</li>
+          <li>Salmón: 130 g (1 ración)</li>
+          <li>Carne picada magra: 130 g</li>
+          <li>Atún al natural: 1 lata (56 g)</li>
+          <li>Huevos: 6</li>
+          <li>Queso fresco 0%: 70 g</li>
+        </ul>
+      </div>
+      <div class="shop-cat">
+        <h3>Hidratos y despensa</h3>
+        <ul>
+          <li>Pan 100% integral: 490 g</li>
+          <li>Arroz: 80 g</li>
+          <li>Macarrones / pasta: 80 g</li>
+          <li>Couscous: 40 g</li>
+          <li>Harina de centeno: 40 g</li>
+          <li>Patata: 320 g</li>
+          <li>Alubias blancas cocidas: 200 g</li>
+          <li>Garbanzos cocidos: 270 g</li>
+          <li>AOVE: ~105 g</li>
+        </ul>
+      </div>
+      <div class="shop-cat">
+        <h3>Verduras</h3>
+        <ul>
+          <li>Lechuga iceberg: 500 g</li>
+          <li>Tomate: ~410 g</li>
+          <li>Calabacín: 350 g</li>
+          <li>Zanahoria: 150 g</li>
+          <li>Champiñones: 200 g</li>
+          <li>Judías verdes: 100 g</li>
+          <li>Brócoli: 200 g</li>
+          <li>Calabaza: 100 g</li>
+          <li>Pepino: 50 g</li>
+        </ul>
+      </div>
+      <div class="shop-cat">
+        <h3>Frutas y lácteos</h3>
+        <ul>
+          <li>Manzana: 200 g (2)</li>
+          <li>Pera: 100 g (1)</li>
+          <li>Naranja / mandarina: 240 g</li>
+          <li>Natillas proteicas: 2</li>
+          <li>Yogur proteico 0%: 3 × 120 g</li>
+          <li>Yogur natural / desnatado: 2</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p><span class="pill">SEMANA 3</span> &nbsp;Menú renovado · ~1.100 kcal / persona / día</p>
+  </footer>
+</div>
+
+<script>
+  var dayMap = ["domingo", "lunes", "martes", "miercoles", "jueves", "viernes", "sabado"];
+
+  function showDay(dayId) {
+    document.querySelectorAll('.day-card').forEach(function (c) { c.classList.remove('active'); });
+    document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
+    var card = document.getElementById('day-' + dayId);
+    var btn = document.getElementById('tab-' + dayId);
+    if (card) card.classList.add('active');
+    if (btn) btn.classList.add('active');
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    var today = new Date();
+    var todayId = dayMap[today.getDay()];
+    var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    var dateString = today.toLocaleDateString('es-ES', options);
+    document.getElementById('current-date').textContent = dateString.charAt(0).toUpperCase() + dateString.slice(1);
+    showDay(todayId);
+  });
+</script>
+
+</body>
+</html>
